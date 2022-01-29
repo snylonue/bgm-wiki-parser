@@ -30,7 +30,6 @@ pub struct Wiki {
 pub fn item(inp: &str) -> IResult<&str, Item> {
     let (inp, inner) = delimited(tag("["), take_until("]"), tag("]")).parse(inp)?;
     let (v, name) = take_till(|c| c == '|').parse(inner)?;
-    dbg!(v, name);
     let item = match (name, v) {
         ("", "") => Item::None,
         (name, "") => Item::Single(name.to_string()), // `|` doesn't exist
@@ -40,7 +39,6 @@ pub fn item(inp: &str) -> IResult<&str, Item> {
 }
 
 fn array(inp: &str) -> IResult<&str, Vec<Item>> {
-    dbg!(inp);
     many0(preceded(multispace0, item)).parse(inp)
 }
 
@@ -62,18 +60,25 @@ fn is_ws(c: char) -> bool {
 }
 
 pub fn info(inp: &str) -> IResult<&str, (String, Data)> {
-    let (inp, key) = tag("|")
-        .and_then(terminated(
+    let (inp, key) = preceded(
+        tag("|"),
+        terminated(
             take_till(|c| c == '=' || is_ws(c)),
             take_while(|c| c == '=' || is_ws(c)),
-        ))
-        .parse(inp)?;
+        ),
+    )
+    .parse(inp)?;
     let (inp, value) = data.parse(inp)?;
     Ok((inp, (key.to_string(), value)))
 }
 
 pub fn wiki(inp: &str) -> IResult<&str, Wiki> {
-    let (inp, content) = delimited(tag("{{"), take_until("}}"), tag("}}")).parse(inp)?;
+    let (inp, content) = delimited(
+        tag("{{").and(take_while(is_ws)).and(tag("InfoBox")),
+        take_until("}}"),
+        tag("}}"),
+    )
+    .parse(inp)?;
     let (data, kind) = take_until("\n").parse(content)?;
     let (_, infos) = many0(preceded(take_while(is_ws), info)).parse(data)?;
     Ok((
