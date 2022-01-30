@@ -32,12 +32,20 @@ pub struct Wiki {
 }
 
 pub fn item(inp: &str) -> IResult<&str, Item> {
-    let (inp, inner) = delimited(tag("["), take_until("]"), tag("]")).parse(inp)?;
+    let (inp, inner) = delimited(
+        tag("["),
+        alt((take_until("]\n"), take_until("]\r\n"), take_until("]"))),
+        tag("]"),
+    )
+    .parse(inp)?;
     let (v, name) = take_till(|c| c == '|').parse(inner)?;
     let item = match (name, v) {
         ("", "") => Item::None,
-        (name, "") => Item::Single(name.to_string()), // `|` doesn't exist
-        (name, v) => Item::Named(name.to_string(), v.trim_start_matches('|').to_string()),
+        (name, "") => Item::Single(name.trim().to_string()), // `|` doesn't exist
+        (name, v) => Item::Named(
+            name.trim().to_string(),
+            v.trim_start_matches('|').trim().to_string(),
+        ),
     };
     Ok((inp, item))
 }
