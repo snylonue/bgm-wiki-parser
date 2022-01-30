@@ -1,0 +1,8 @@
+type: null
+data:
+  - { key: A, value: null }
+  - { key: b, value: null }
+  - key: d
+    value:
+      - { v: "1" }
+      - { v: null }

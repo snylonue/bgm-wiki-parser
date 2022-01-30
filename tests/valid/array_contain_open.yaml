@@ -1,0 +1,5 @@
+type: null
+data:
+  - key: A
+    value:
+      - { "k": "a", "v": "a[sd" }

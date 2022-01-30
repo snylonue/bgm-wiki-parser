@@ -1,0 +1,7 @@
+type: null
+data:
+  - key: A
+    value:
+      - { "k": "a", "v": "b" }
+      - { "k": "c", "v": "d" }
+      - { "v": "e" }
