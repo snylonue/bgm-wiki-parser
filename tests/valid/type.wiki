@@ -1,2 +1,2 @@
-{{InfoBox Ta
+{{Infobox Ta
 }}

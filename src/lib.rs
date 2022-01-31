@@ -95,7 +95,7 @@ pub fn wiki(inp: &str) -> IResult<&str, Wiki> {
         return Ok(("", Wiki::default()));
     }
     let (inp, content) = delimited(
-        tag("{{").and(take_while(is_ws)).and(tag("InfoBox")),
+        tag("{{").and(take_while(is_ws)).and(tag("Infobox")),
         take_until("}}"),
         tag("}}"),
     )
