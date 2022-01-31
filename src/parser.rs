@@ -73,18 +73,13 @@ pub fn wiki(inp: &str) -> IResult<&str, Wiki> {
     if inp.is_empty() {
         return Ok(("", Wiki::default()));
     }
-    let (inp, content) = delimited(
-        tag("{{").and(take_while(is_ws)).and(tag("Infobox")),
-        take_until("}}"),
-        tag("}}"),
-    )
-    .parse(inp)?;
+    let (inp, content) = delimited(tag("{{Infobox"), take_until("}}"), tag("}}")).parse(inp)?;
     let (data, kind) = take_till_newline.parse(content)?;
     let (_, infos) = many0(preceded(many0(tag_newline), info)).parse(data)?;
     Ok((
         inp,
         Wiki {
-            kind: kind.trim().to_string(),
+            kind: kind.trim().to_string(), // todo: verify that kind only contains `[a-zA-Z]` or `/`
             data: HashMap::from_iter(infos),
         },
     ))
