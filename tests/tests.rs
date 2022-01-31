@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod item {
-    use bgm_wiki_parser::{item, Item};
+    use bgm_wiki_parser::{parser::item, Item};
 
     #[test]
     fn single() {
@@ -23,7 +23,7 @@ mod item {
 
 #[cfg(test)]
 mod data {
-    use bgm_wiki_parser::{data, Data, Item};
+    use bgm_wiki_parser::{parser::data, Data, Item};
 
     #[test]
     fn scalar() {
@@ -46,7 +46,7 @@ mod data {
 
 #[cfg(test)]
 mod wiki {
-    use bgm_wiki_parser::{wiki, Wiki};
+    use bgm_wiki_parser::{parser::*, Wiki};
 
     mod de {
         use bgm_wiki_parser::{Item, Wiki};
