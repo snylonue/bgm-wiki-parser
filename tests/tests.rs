@@ -212,4 +212,12 @@ mod wiki {
         let (_, res) = wiki("{{Infobox\n}}").unwrap();
         assert_eq!(res, Wiki::default());
     }
+
+    #[test]
+    fn emptyline() {
+        const DATA: &str = include_str!("valid/emptyline.wiki");
+        let (_, res) = wiki(DATA).unwrap();
+        let correct = de::deserialize(include_str!("valid/emptyline.yaml"));
+        assert_eq!(res, correct);
+    }
 }
