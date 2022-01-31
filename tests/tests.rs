@@ -46,7 +46,7 @@ mod data {
 
 #[cfg(test)]
 mod wiki {
-    use bgm_wiki_parser::wiki;
+    use bgm_wiki_parser::{wiki, Wiki};
 
     mod de {
         use bgm_wiki_parser::{Item, Wiki};
@@ -203,5 +203,13 @@ mod wiki {
         let (_, res) = wiki(DATA).unwrap();
         let correct = de::deserialize(include_str!("valid/type.yaml"));
         assert_eq!(res, correct);
+    }
+
+    #[test]
+    fn empty() {
+        let (_, res) = wiki("").unwrap();
+        assert_eq!(res, Wiki::default());
+        let (_, res) = wiki("{{Infobox\n}}").unwrap();
+        assert_eq!(res, Wiki::default());
     }
 }

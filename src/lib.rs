@@ -24,7 +24,7 @@ pub enum Data {
     Scalar(String),
 }
 
-#[derive(Debug, PartialEq, Eq, Clone, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Eq, Clone, Serialize, Deserialize, Default)]
 pub struct Wiki {
     #[serde(rename = "type")]
     pub kind: String,
@@ -91,6 +91,9 @@ fn tag_newline(inp: &str) -> IResult<&str, &str> {
 }
 
 pub fn wiki(inp: &str) -> IResult<&str, Wiki> {
+    if inp.is_empty() {
+        return Ok(("", Wiki::default()));
+    }
     let (inp, content) = delimited(
         tag("{{").and(take_while(is_ws)).and(tag("InfoBox")),
         take_until("}}"),
